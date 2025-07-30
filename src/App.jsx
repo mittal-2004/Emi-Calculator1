@@ -10,11 +10,12 @@ function App() {
   const [emi, setEmi] = useState(null);
   const[totalInterest, setTotalInterest]=useState(null);
   const[totalPayment,setTotalPayment]=useState(null);
+  const[schedule ,setSchedule]=useState([]);
   
   const calculateEMI = () => {
     const principal = parseFloat(amount);
     const annualRate = parseFloat(interest);
-    const tenureYears = parseFloat(years);
+    const tenureYears = parseInt(years);
 
     if (principal && annualRate && tenureYears) {
       const monthlyRate = annualRate / 12 / 100;
@@ -24,10 +25,27 @@ function App() {
         (Math.pow(1 + monthlyRate, months) - 1);
           const totalPayment = emi * months;
           const totalInterest=totalPayment-principal;
-
       setEmi(emi.toFixed(2));
       setTotalInterest(Number(totalInterest.toFixed(2)).toLocaleString('en-IN'));
       setTotalPayment(totalPayment.toFixed(2));
+
+    let balance=principal;
+        const scheduleArr=[];
+        for(let i=1;i<=months;i++){
+          const interestPayment=balance*monthlyRate;
+          const principalPayment=emi-interestPayment;
+          balance=balance-principalPayment;
+        
+        scheduleArr.push({
+         emi:emi.toFixed(2),
+          month:i,
+          principal:principalPayment.toFixed(2),
+          interest:interestPayment.toFixed(2),
+          balance:balance>0?balance.toFixed(2):"0.00"
+        });
+
+      }
+      setSchedule(scheduleArr);
     } else {
       setEmi(null);
        setTotalInterest(null);
@@ -41,12 +59,18 @@ function App() {
     <div className="bg-secondary min-vh-100">
     <div className="container">
       <div className="row justify-content-center">
-        <div className="col-md-6 col-lg-4">
+        <div className="col-md-8 col-lg-10">
           <div className="card mt-5 p-4 text-center shadow-sm">
-            <h5 className="text-success mb-4">EMI CALCULATOR</h5>
-
+            <h5 className="text-success mb-4 fs-2">EMI CALCULATOR</h5>
+          
           <label htmlFor="amount" className="form-label">
-        Enter Amount:<strong>{amount}</strong>
+            <div class="d-flex justify-content-between">
+              <span><b>₹10000</b></span>
+              <span>Enter Amount:<strong>{amount}</strong></span>
+              <span><b>₹3000000</b></span>
+              
+            </div>
+       
       </label>
       <input
         type="range"
@@ -60,7 +84,13 @@ function App() {
       />
       
        <label htmlFor="interest" className="form-label">
-        Interest Rate %:<strong>{interest}</strong>
+        <div class="d-flex justify-content-between">
+              <span><b>0%</b></span>
+              <span> Interest Rate %:<strong>{interest}</strong></span>
+              <span><b>25%</b></span>
+              
+            </div>
+       
       </label>
       <input
         type="range"
@@ -76,7 +106,13 @@ function App() {
       />
 
       <label htmlFor="years" className="form-label">
-        Years:<strong>{years}</strong>
+         <div class="d-flex justify-content-between">
+              <span><b>0</b></span>
+              <span>   Years:<strong>{years}</strong></span>
+              <span><b>30</b></span>
+              
+            </div>
+      
       </label>
       <input
         type="range"
@@ -110,6 +146,32 @@ function App() {
               <div class="mt-2 fs-6 text-dark">
                 Total Amount: <b>{totalPayment}</b>
               </div>
+                 {schedule.length > 0 && (
+        <div className="table-responsive">
+          <table className="table table-bordered table-hover text-center mt-3">
+            <thead className="table-primary">
+              <tr>
+                <th>Month</th>
+                <th>EMI (₹)</th>
+                <th>Principal (₹)</th>
+                <th>Interest (₹)</th>
+                <th>Remaining Balance (₹)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {schedule.map((row) => (
+                <tr key={row.month}>
+                  <td>{row.month}</td>
+                  <td>{row.emi}</td>
+                  <td>{row.principal}</td>
+                  <td>{row.interest}</td>
+                  <td>{row.balance}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
             </div>
           </div>
