@@ -139,12 +139,12 @@ function App() {
               </div>
             )}
             <div className="mt-2 fs-6 text-dark">
-              Principal Amount is: <b>{amount}</b>
+              Principal Amount is: <b>₹{amount}</b>
             </div>
             <div className="mt-2 fs-6 text-dark">
-              Total Interest: <b>{totalInterest}</b>
+              Total Interest: <b>₹{totalInterest}</b>
               <div class="mt-2 fs-6 text-dark">
-                Total Amount: <b>{totalPayment}</b>
+                Total Amount: <b>₹{totalPayment}</b>
               </div>
                  {schedule.length > 0 && (
         <div className="table-responsive">
