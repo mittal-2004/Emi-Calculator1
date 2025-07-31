@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import './App.css';
 
 function App() {
@@ -50,7 +50,17 @@ function App() {
       setEmi(null);
        setTotalInterest(null);
     }
-  }
+  };
+    useEffect(() => {
+    if (amount > 0 && interest > 0 && years > 0) {
+      calculateEMI();
+    } else {
+      setEmi(null);
+      setTotalInterest(null);
+      setTotalPayment(null);
+      setSchedule([]);
+    }
+  }, [amount, interest, years]);
 
     
 
@@ -64,7 +74,7 @@ function App() {
             <h5 className="text-success mb-4 fs-2">EMI CALCULATOR</h5>
           
           <label htmlFor="amount" className="form-label">
-            <div class="d-flex justify-content-between">
+            <div className="d-flex justify-content-between">
               <span><b>₹10000</b></span>
               <span>Enter Amount:<strong>{amount}</strong></span>
               <span><b>₹3000000</b></span>
@@ -84,7 +94,7 @@ function App() {
       />
       
        <label htmlFor="interest" className="form-label">
-        <div class="d-flex justify-content-between">
+        <div className="d-flex justify-content-between">
               <span><b>0%</b></span>
               <span> Interest Rate %:<strong>{interest}</strong></span>
               <span><b>25%</b></span>
@@ -106,7 +116,7 @@ function App() {
       />
 
       <label htmlFor="years" className="form-label">
-         <div class="d-flex justify-content-between">
+         <div className="d-flex justify-content-between">
               <span><b>0</b></span>
               <span>   Years:<strong>{years}</strong></span>
               <span><b>30</b></span>
@@ -129,9 +139,6 @@ function App() {
             
            
 
-            <button className="btn btn-primary w-100" onClick={calculateEMI}>
-              Calculate EMI
-            </button>
 
             {emi !== null && (
               <div className="mt-4 fs-6 text-dark">
@@ -143,7 +150,7 @@ function App() {
             </div>
             <div className="mt-2 fs-6 text-dark">
               Total Interest: <b>₹{totalInterest}</b>
-              <div class="mt-2 fs-6 text-dark">
+              <div className="mt-2 fs-6 text-dark">
                 Total Amount: <b>₹{totalPayment}</b>
               </div>
                  {schedule.length > 0 && (
